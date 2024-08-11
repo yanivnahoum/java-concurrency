@@ -134,6 +134,15 @@ class CompletableFutures {
     }
 
     @Test
+    void eitherTask() {
+        CompletableFuture<String> f1 = supplyAsync(() -> sleepAndReturn(100, "one"), threadPool);
+        CompletableFuture<String> f2 = supplyAsync(() -> sleepAndReturn(200, "two"));
+
+        CompletableFuture<String> combinedFuture = f1.applyToEither(f2, str -> getInfo() + ", got " + str);
+        System.out.println(combinedFuture.join());
+    }
+
+    @Test
     void allOf() {
         CompletableFuture<Integer> f1 = supplyAsync(() -> sleepAndReturn(500, 1));
         CompletableFuture<String> f2 = supplyAsync(() -> sleepAndReturn(1000, "2"));
