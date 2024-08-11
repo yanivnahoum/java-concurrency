@@ -4,12 +4,13 @@ import learn.java.threads.Utils;
 
 public class IncorrectCountingThreads {
 
-    private static /*volatile*/ int counter = 0;
+    private static volatile int counter = 0;
 
     public static void main(String[] args) throws InterruptedException {
         Runnable incrementor = () -> {
             for (int i = 0; i < 100_000_000; i++) {
-                counter++;
+                counter++; // Not an atomic action therefore even when we uncomment
+                           // the volatile keyword the counting is still incorrect
             }
         };
 
