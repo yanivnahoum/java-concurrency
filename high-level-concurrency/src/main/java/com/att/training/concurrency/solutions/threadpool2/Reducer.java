@@ -27,6 +27,7 @@ class Reducer {
     }
 
     long get() {
+        Utils.shutdownAndAwaitTermination(executorService);
         return value.sum();
     }
 }
