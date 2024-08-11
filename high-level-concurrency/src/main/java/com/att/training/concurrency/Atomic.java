@@ -86,7 +86,7 @@ class Atomic {
         LongAdder adder = new LongAdder();
 
         LongStream.rangeClosed(1, 1_000_000)
-                  .forEach(i -> executor.execute(()-> adder.add(i)));
+                  .forEach(i -> executor.execute(() -> adder.add(i)));
 
         shutdownAndAwaitTermination(executor);
         System.out.println("Counter: " + adder.sum());

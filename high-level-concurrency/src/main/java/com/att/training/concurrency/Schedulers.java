@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
+import static com.att.training.concurrency.Utils.keepJvmAliveFor;
 import static com.att.training.concurrency.Utils.shutdownAndAwaitTermination;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
@@ -44,20 +44,24 @@ class Schedulers {
     @Test
     void runPeriodically() {
         scheduledExecutor = newScheduledThreadPool(1);
-
-        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime());
+        Runnable task = () -> {
+            System.out.printf("%s - Starting task: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            sleepUninterruptibly(500, MILLISECONDS);
+            System.out.printf("%s - Done: %s%n", LocalTime.now(), Thread.currentThread().getName());
+        };
 
         int initialDelay = 0;
         int period = 1;
+        // Executions won't overlap!
         scheduledExecutor.scheduleAtFixedRate(task, initialDelay, period, SECONDS);
 
-        keepJvmAliveFor(5, SECONDS);
+        keepJvmAliveFor(10, SECONDS);
     }
 
     @Test
     void runPeriodicallyWithDaemonThreads() {
         System.out.println("Hello!");
-        scheduledExecutor = newScheduledThreadPool(1, new ThreadFactoryBuilder()
+        scheduledExecutor = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                 .setDaemon(true)
                 .build());
 
@@ -113,14 +117,5 @@ class Schedulers {
         scheduledExecutor.scheduleWithFixedDelay(task, initialDelay, delay, SECONDS);
 
         keepJvmAliveFor(10, SECONDS);
-    }
-
-    private static void keepJvmAliveFor(int count, TimeUnit timeUnit) {
-        try {
-            timeUnit.sleep(count);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
