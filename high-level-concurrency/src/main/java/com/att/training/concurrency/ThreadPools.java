@@ -3,7 +3,6 @@ package com.att.training.concurrency;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -120,7 +119,7 @@ class ThreadPools {
     void invokeAll() throws InterruptedException {
         executor = Executors.newWorkStealingPool();
 
-        List<Callable<String>> callables = Arrays.asList(
+        List<Callable<String>> callables = List.of(
                 // Set sleepSeconds to 0 or less to generate an ExecutionException
                 buildCallable("task1", 1),
                 buildCallable("task2", 2),
@@ -149,7 +148,7 @@ class ThreadPools {
     void invokeAny() throws InterruptedException, ExecutionException {
         executor = Executors.newWorkStealingPool();
 
-        List<Callable<String>> callables = Arrays.asList(
+        List<Callable<String>> callables = List.of(
                 // Set sleepSeconds to 0 or less in ALL tasks to generate an ExecutionException
                 buildCallable("task1", 1),
                 buildCallable("task2", 2),
