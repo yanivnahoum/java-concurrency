@@ -13,6 +13,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>11</maven.compiler.release>
         <guava.version>29.0-jre</guava.version>
+        <lombok.version>1.18.14</lombok.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
         <mockito.version>3.5.13</mockito.version>
         <assertj-core.version>3.17.2</assertj-core.version>
@@ -26,6 +27,14 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
