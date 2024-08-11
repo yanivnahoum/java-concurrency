@@ -22,11 +22,25 @@ public class BasicThreadExecution {
             }
         });
 
+        // Create another sleeper using method ref
+        Thread t2 = new Thread(BasicThreadExecution::runMe);
+
         // Start the threads
         t.start();
         t1.start();
+        t2.start();
 
         System.out.println("-- main thread finished --");
+    }
+
+    private static void runMe() {
+        try {
+            System.out.println("-- t2: going to sleep --");
+            Thread.sleep(5000);
+            System.out.println("-- t2: im awake! --");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 
