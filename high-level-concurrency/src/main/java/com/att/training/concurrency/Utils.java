@@ -1,8 +1,10 @@
 package com.att.training.concurrency;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -28,5 +30,11 @@ public class Utils {
 
     public static String currentThreadName() {
         return Thread.currentThread().getName();
+    }
+
+    public static ThreadFactory daemonThreadFactory() {
+        return new ThreadFactoryBuilder()
+                .setDaemon(true)
+                .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.att.training.concurrency;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,12 +9,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.att.training.concurrency.Utils.currentThreadName;
+import static com.att.training.concurrency.Utils.daemonThreadFactory;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
@@ -215,9 +214,4 @@ class CompletableFutures {
                                               .collect(toList()));
     }
 
-    private static ThreadFactory daemonThreadFactory() {
-        return new ThreadFactoryBuilder()
-                .setDaemon(true)
-                .build();
-    }
 }
