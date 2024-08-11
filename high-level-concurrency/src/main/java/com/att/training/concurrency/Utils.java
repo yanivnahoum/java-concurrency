@@ -13,6 +13,6 @@ class Utils {
     }
 
     static void shutdownAndAwaitTermination(ExecutorService executor) {
-        MoreExecutors.shutdownAndAwaitTermination(executor, 1L, SECONDS);
+        MoreExecutors.shutdownAndAwaitTermination(executor, 30L, SECONDS);
     }
 }
