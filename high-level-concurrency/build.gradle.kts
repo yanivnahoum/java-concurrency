@@ -30,6 +30,9 @@ tasks {
             release.set(11)
         }
     }
+    generateLombokConfig {
+        isEnabled = false
+    }
 
     test {
         useJUnitPlatform {
