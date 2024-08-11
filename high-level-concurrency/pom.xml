@@ -12,11 +12,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>11</maven.compiler.release>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>30.0-jre</guava.version>
         <lombok.version>1.18.14</lombok.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
-        <mockito.version>3.5.13</mockito.version>
-        <assertj-core.version>3.17.2</assertj-core.version>
+        <mockito.version>3.6.0</mockito.version>
+        <assertj-core.version>3.18.0</assertj-core.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>

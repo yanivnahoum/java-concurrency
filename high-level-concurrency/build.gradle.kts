@@ -16,12 +16,12 @@ sourceSets {
 }
 
 dependencies {
-    val mockitoVersion = "3.5.13"
-    implementation("com.google.guava:guava:29.0-jre")
+    val mockitoVersion = "3.6.0"
+    implementation("com.google.guava:guava:30.0-jre")
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
     testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
-    testImplementation("org.assertj:assertj-core:3.17.2")
+    testImplementation("org.assertj:assertj-core:3.18.0")
 }
 
 tasks {
