@@ -5,7 +5,7 @@ public class MailBox {
     private String message = "";
 
     public synchronized String take(){
-        while (this.isEmpty()){
+        while (this.message.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -18,19 +18,15 @@ public class MailBox {
         return answer;
     }
 
-    public synchronized void put(String message){
-        while (!this.isEmpty()){
+    public synchronized void put(String newMessage){
+        while (!this.message.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 // Continue
             }
         }
-        this.message = message;
+        this.message = newMessage;
         this.notifyAll();
-    }
-
-    private boolean isEmpty(){
-        return "".equals(message);
     }
 }

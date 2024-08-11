@@ -11,4 +11,12 @@ public class Utils {
         System.out.println("Took: " + elapsed);
         return elapsed;
     }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

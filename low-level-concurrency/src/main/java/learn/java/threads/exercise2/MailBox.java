@@ -10,7 +10,7 @@ public class MailBox {
         return null;
     }
 
-    public synchronized void put(String message){
+    public synchronized void put(String newMessage){
         // Put a new message in the mailbox.
         // If its not empty, wait until the consumer consumes the message
     }

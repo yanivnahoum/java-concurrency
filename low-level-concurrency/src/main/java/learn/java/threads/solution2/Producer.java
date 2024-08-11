@@ -1,5 +1,7 @@
 package learn.java.threads.solution2;
 
+import learn.java.threads.Utils;
+
 public class Producer implements Runnable {
 
     private static final String[] WORDS = {
@@ -19,11 +21,7 @@ public class Producer implements Runnable {
             System.out.println("Producer is sending message : " + message);
             mailBox.put(message);
             this.messageCount++;
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return;
-            }
+            Utils.sleep(2000);
         }
         System.out.println("Producer finished sending all messages");
     }
