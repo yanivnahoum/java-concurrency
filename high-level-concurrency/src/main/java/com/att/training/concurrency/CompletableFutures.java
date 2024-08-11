@@ -3,13 +3,10 @@ package com.att.training.concurrency;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -20,13 +17,13 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 @Slow
 class CompletableFutures {
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4, daemonThreadFactory());
-    private final Random random = new Random();
 
     @Test
     void runAsyncTask() {
@@ -47,14 +44,15 @@ class CompletableFutures {
 
     private String getInfo() {
         return "I'm currently running on: " + currentThreadName() + ". Is thread daemon? " + Thread.currentThread()
-                                                                                                         .isDaemon();
+                .isDaemon();
     }
 
     @Test
     void helloWorldAsync() {
         CompletableFuture<String> futureString = getAsync("Hello Async World!");
-        //        .handle(this::handleResult);
-        //        .exceptionally(Throwable::toString);
+//                .handle(this::handleResult);
+//                .handle((result, ex) -> ex == null ? 0 : 128);
+//                .exceptionally(Throwable::toString);
         System.out.println(futureString.join());
     }
 
@@ -66,6 +64,7 @@ class CompletableFutures {
         scheduler.schedule(() -> {
             // Complete the future: with a result/exception, or even cancel it
             future.complete(str);
+//            future.completeExceptionally(new RuntimeException("boom"));
         }, 2, SECONDS);
 
         return future;
@@ -75,15 +74,14 @@ class CompletableFutures {
         if (ex == null) {
             return "Got " + result;
         }
-        else {
-            return "An exception occurred: " + ex.getMessage();
-        }
+        return "An exception occurred: " + ex.getMessage();
     }
 
     @Test
     void thenApplyAcceptAndRun() {
         // Which thread do chained methods run on?
-        CompletableFuture<Void> f1 = supplyAsync(() -> sleepAndReturn(500, "1"))
+        CompletableFuture<String> futureString = supplyAsync(() -> sleepAndReturn(500, "1"));
+        CompletableFuture<Void> f1 = futureString
                 .thenApply(this::stringToInt)
                 .thenAccept(this::println)
                 .thenRun(this::printInfo);
@@ -93,6 +91,9 @@ class CompletableFutures {
 //                .thenAcceptAsync(this::println)
 //                .join();
 
+
+        // Uncomment this to complete futureString from the main thread. How does it affect the the rest of the chained tasks?
+//        futureString.complete("100");
         f1.join();
 //
 //        supplyAsync(() -> sleepAndReturn(700, "3"), threadPool)
@@ -142,17 +143,16 @@ class CompletableFutures {
 
         try {
             all.join();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("all - an exception occurred: " + e);
         }
 
         System.out.printf("Done. f1: %s, f3: %s%n", f1.join(), f3.join());
 
         String results = Stream.of(f1, f2, f3)
-                               .filter(not(CompletableFuture::isCompletedExceptionally))
-                               .map(cf -> cf.join().toString())
-                               .collect(joining(", "));
+                .filter(not(CompletableFuture::isCompletedExceptionally))
+                .map(cf -> cf.join().toString())
+                .collect(joining(", "));
         System.out.println("Results: " + results);
     }
 
@@ -167,8 +167,7 @@ class CompletableFutures {
         try {
             Object result = any.join();
             System.out.printf("Done. result: %s", result);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("An exception occurred: " + e);
         }
     }
@@ -176,18 +175,12 @@ class CompletableFutures {
     @Test
     void runMultipleTasks() {
         List<CompletableFuture<String>> futures = IntStream.range(1, 10)
-                                                           .boxed()
-                                                           .map(this::intToStringAsync)
-                                                           .collect(toList());
+                .mapToObj(this::intToStringAsync)
+                .collect(toList());
 
         merge(futures)
                 .thenAccept(System.out::println)
                 .join();
-    }
-
-    private CompletableFuture<String> intToStringAsync(int i) {
-        return supplyAsync(() -> sleepAndReturn(i, Integer.toString(i)))
-                .exceptionally(Throwable::getMessage);
     }
 
     private <T> T sleepAndReturn(int ms, T obj) {
@@ -196,22 +189,24 @@ class CompletableFutures {
             throw new RuntimeException("Boom!");
         }
         System.out.printf("[%s] - Slept %dms, now returning %s as %s%n", currentThreadName(), ms, obj, obj.getClass()
-                                                                                                                .getSimpleName());
+                .getSimpleName());
         return obj;
     }
 
-    @SuppressWarnings("unchecked")
-    static <T> Predicate<T> not(Predicate<? super T> target) {
-        Objects.requireNonNull(target);
-        return (Predicate<T>) target.negate();
+    private CompletableFuture<String> intToStringAsync(int i) {
+        return supplyAsync(() -> sleepAndReturn(i, Integer.toString(i)))
+                .exceptionally(Throwable::getMessage);
     }
 
+    /**
+     * Flattens an list of CompletableFutures into a CompletableFuture of a list
+     */
     private static <T> CompletableFuture<List<T>> merge(List<CompletableFuture<T>> futures) {
         CompletableFuture<Void> all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
 
         return all.thenApply(ignore -> futures.stream()
-                                              .map(CompletableFuture::join)
-                                              .collect(toList()));
+                .map(CompletableFuture::join)
+                .collect(toList()));
     }
 
 }
