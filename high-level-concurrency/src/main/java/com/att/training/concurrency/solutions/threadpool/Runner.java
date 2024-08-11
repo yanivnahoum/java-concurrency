@@ -15,16 +15,13 @@ class Runner {
         System.out.println("Run duration: " + stopwatch);
     }
 
-    private static Stopwatch run() {
+    private static void run() {
         ExecutorService executorService = Executors.newFixedThreadPool(1000);
-
-        Stopwatch stopwatch = time(() -> run(executorService));
-
+        runOn(executorService);
         Utils.shutdownAndAwaitTermination(executorService);
-        return stopwatch;
     }
 
-    private static void run(ExecutorService executorService) {
+    private static void runOn(ExecutorService executorService) {
         Reducer reducer = new Reducer(new SleepyCalculatorService(), executorService);
         LongStream.rangeClosed(1, 1000)
                   .forEach(reducer::put);

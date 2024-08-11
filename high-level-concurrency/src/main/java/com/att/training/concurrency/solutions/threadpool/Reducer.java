@@ -24,7 +24,6 @@ class Reducer {
     }
 
     long get() {
-        executorService.shutdown();
         return tasks.stream()
                     .mapToLong(this::getOrThrow)
                     .sum();

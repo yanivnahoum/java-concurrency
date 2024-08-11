@@ -7,9 +7,9 @@ import com.att.training.concurrency.exercises.common.CalculatorService;
  * By calling put(1), put(2),...,put(n) and the get(), the value returned
  * is the nth pyramidal square number: Pn = (2n^3 + 3n^2 + n)/6
  * <br>
- * P10 = 1^2 + 2^2 + ... + 10^2 = 1 + 4 + ... + 100 = 385
+ * P10 = 1^2 + 2^2 + ... + 10^2 = 1 + 4 + ... + 100 = (2x10^3 + 3x10^2 + 10)/6 = 385
  * <br>
- * P1000 = 333833500
+ * P1000 = (2x1000^3 + 3x1000^2 + 1000)/6 = 333833500
  */
 class Reducer {
 

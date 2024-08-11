@@ -122,8 +122,8 @@ class ThreadPools {
 
         List<Callable<String>> callables = Arrays.asList(
                 // Set sleepSeconds to 0 or less to generate an ExecutionException
-                buildCallable("task1", 2),
-                buildCallable("task2", 1),
+                buildCallable("task1", 1),
+                buildCallable("task2", 2),
                 buildCallable("task3", 3));
 
         System.out.println("Go!");
@@ -137,7 +137,7 @@ class ThreadPools {
                        result = future.get();
                    }
                    catch (Exception e) {
-                       e.printStackTrace();
+                       //e.printStackTrace();
                        result = "an exception was thrown";
                    }
                    return result;
@@ -151,9 +151,9 @@ class ThreadPools {
 
         List<Callable<String>> callables = Arrays.asList(
                 // Set sleepSeconds to 0 or less in ALL tasks to generate an ExecutionException
-                buildCallable("task1", 2),
-                buildCallable("task2", 3),
-                buildCallable("task3", 1));
+                buildCallable("task1", 1),
+                buildCallable("task2", 2),
+                buildCallable("task3", 3));
 
         String result = executor.invokeAny(callables);
         System.out.println("Result: " + result);
