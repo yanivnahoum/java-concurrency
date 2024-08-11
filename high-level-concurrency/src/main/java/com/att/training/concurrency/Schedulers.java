@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import static com.att.training.concurrency.Utils.currentThreadName;
 import static com.att.training.concurrency.Utils.keepJvmAliveFor;
 import static com.att.training.concurrency.Utils.shutdownAndAwaitTermination;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
@@ -30,24 +31,22 @@ class Schedulers {
     void runOnce() {
         scheduledExecutor = newSingleThreadScheduledExecutor();
 
-        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime());
+        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime() + " , daemon? " + Thread.currentThread().isDaemon());
         ScheduledFuture<?> future = scheduledExecutor.schedule(task, 3, SECONDS);
 
         sleepUninterruptibly(1, SECONDS);
 
         long remainingDelay = future.getDelay(MILLISECONDS);
         System.out.printf("Remaining Delay: %sms%n", remainingDelay);
-
-        keepJvmAliveFor(2, SECONDS);
     }
 
     @Test
     void runPeriodically() {
         scheduledExecutor = newScheduledThreadPool(1);
         Runnable task = () -> {
-            System.out.printf("%s - Starting task: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Starting task: %s. Daemon? %b%n", LocalTime.now(), currentThreadName(), Thread.currentThread().isDaemon());
             sleepUninterruptibly(500, MILLISECONDS);
-            System.out.printf("%s - Done: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Done: %s%n", LocalTime.now(), currentThreadName());
         };
 
         int initialDelay = 0;
@@ -65,7 +64,7 @@ class Schedulers {
                 .setDaemon(true)
                 .build());
 
-        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime());
+        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime() + ", isDaemon? " + Thread.currentThread().isDaemon());
 
         int initialDelay = 0;
         int period = 1;
@@ -81,14 +80,14 @@ class Schedulers {
                 .build());
 
         Runnable task = () -> {
-            System.out.printf("%s - Starting task1: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Starting task1: %s%n", LocalTime.now(), currentThreadName());
             sleepUninterruptibly(2, SECONDS);
-            System.out.printf("%s - Done1: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Done1: %s%n", LocalTime.now(), currentThreadName());
         };
         Runnable task2 = () -> {
-            System.err.printf("%s - Starting task2: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.err.printf("%s - Starting task2: %s%n", LocalTime.now(), currentThreadName());
             sleepUninterruptibly(2, SECONDS);
-            System.err.printf("%s - Done2: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.err.printf("%s - Done2: %s%n", LocalTime.now(), currentThreadName());
         };
 
         //  If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute.
@@ -107,9 +106,9 @@ class Schedulers {
                 .build());
 
         Runnable task = () -> {
-            System.out.printf("%s - Starting task: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Starting task: %s%n", LocalTime.now(), currentThreadName());
             sleepUninterruptibly(1, SECONDS);
-            System.out.printf("%s - Done: %s%n", LocalTime.now(), Thread.currentThread().getName());
+            System.out.printf("%s - Done: %s%n", LocalTime.now(), currentThreadName());
         };
 
         int initialDelay = 0;
