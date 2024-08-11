@@ -20,8 +20,9 @@ class Atomic {
         AtomicInteger atomicInt = new AtomicInteger();
         ExecutorService executor = newFixedThreadPool(2);
 
-        IntStream.range(0, 1_000_000)
-                 .forEach(i -> executor.submit(atomicInt::incrementAndGet));
+        for (int i = 0; i < 1_000_000; i++) {
+            executor.submit(atomicInt::incrementAndGet);
+        }
 
         shutdownAndAwaitTermination(executor);
 
@@ -33,8 +34,9 @@ class Atomic {
         AtomicInteger atomicInt = new AtomicInteger(0);
         ExecutorService executor = newFixedThreadPool(4);
 
-        IntStream.range(0, 1000000)
-                 .forEach(i -> executor.submit(() -> atomicInt.updateAndGet(n -> n + 2)));
+        for (int i = 0; i < 1000000; i++) {
+            executor.submit(() -> atomicInt.updateAndGet(n -> n + 2));
+        }
 
         shutdownAndAwaitTermination(executor);
 
@@ -97,7 +99,7 @@ class Atomic {
  * Immutable counter
  */
 class Counter {
-    private int value;
+    private final int value;
 
     Counter(int value) {
         this.value = value;

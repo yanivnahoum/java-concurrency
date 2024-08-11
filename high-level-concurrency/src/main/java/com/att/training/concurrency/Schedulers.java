@@ -60,9 +60,10 @@ class Schedulers {
     @Test
     void runPeriodicallyWithDaemonThreads() {
         System.out.println("Hello!");
-        scheduledExecutor = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
+        var threadFactory = new ThreadFactoryBuilder()
                 .setDaemon(true)
-                .build());
+                .build();
+        scheduledExecutor = newSingleThreadScheduledExecutor(threadFactory);
 
         Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime() + ", isDaemon? " + Thread.currentThread().isDaemon());
 
@@ -75,9 +76,10 @@ class Schedulers {
 
     @Test
     void runLongTaskAtFixedRate() {
-        scheduledExecutor = newScheduledThreadPool(1, new ThreadFactoryBuilder()
+        var threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("fixed-rate-scheduler-pool-%d")
-                .build());
+                .build();
+        scheduledExecutor = newScheduledThreadPool(1, threadFactory);
 
         Runnable task = () -> {
             System.out.printf("%s - Starting task1: %s%n", LocalTime.now(), currentThreadName());
@@ -101,9 +103,10 @@ class Schedulers {
 
     @Test
     void runLongTaskWithFixedDelay() {
-        scheduledExecutor = newScheduledThreadPool(1, new ThreadFactoryBuilder()
+        var threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("fixed-delay-scheduler-pool-%d")
-                .build());
+                .build();
+        scheduledExecutor = newScheduledThreadPool(1, threadFactory);
 
         Runnable task = () -> {
             System.out.printf("%s - Starting task: %s%n", LocalTime.now(), currentThreadName());
