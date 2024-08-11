@@ -1,6 +1,6 @@
 plugins {
     java
-    id("io.freefair.lombok") version "6.2.0"
+    id("io.freefair.lombok") version "6.4.0"
 }
 
 repositories {
@@ -16,12 +16,12 @@ sourceSets {
 }
 
 dependencies {
-    val mockitoVersion = "4.0.0"
+    val mockitoVersion = "4.3.1"
     implementation("com.google.guava:guava:31.0.1-jre")
-    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
     testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
-    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation("org.assertj:assertj-core:3.22.0")
 }
 
 tasks {
