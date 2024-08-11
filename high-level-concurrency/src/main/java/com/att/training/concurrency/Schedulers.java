@@ -16,6 +16,7 @@ import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+@Slow
 class Schedulers {
 
     private ScheduledExecutorService scheduledExecutor;

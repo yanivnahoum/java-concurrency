@@ -17,6 +17,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+@Slow
 class ThreadPools {
 
     private ExecutorService executor;
