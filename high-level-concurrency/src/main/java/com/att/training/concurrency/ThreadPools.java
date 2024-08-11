@@ -60,8 +60,6 @@ class ThreadPools {
 
         System.out.println("future done? " + future.isDone());
         System.out.print("result: " + result);
-
-        shutdownAndAwaitTermination(executor);
     }
 
     private static Integer getInt() {
@@ -85,6 +83,37 @@ class ThreadPools {
         System.out.println("Result: " + result);
     }
 
+    /**
+     * Tasks can be canceled in one of two states:
+     * 1. Not running
+     * 2. Running
+     *   Not running -
+     *     1. Before starting
+     *     2. After completion
+     *   Running -
+     *     1. Interruptable task and mayInterrupt flag is true
+     *     2. Either task is not interruptable or mayInterrupt flag is false
+     */
+    @Test
+    void cancelTask() throws InterruptedException {
+        executor = newFixedThreadPool(1);
+
+        Future<Integer> future = executor.submit(() -> {
+            String threadName = Thread.currentThread().getName();
+            System.out.println("Running task on " + threadName);
+            SECONDS.sleep(2);
+            System.out.println("Task done.");
+            return 123;
+        });
+
+
+        SECONDS.sleep(1);
+        // Return value indicated whether we were abe to cancel the task before it completed
+        boolean canceled = future.cancel(true);
+
+        System.out.println("Done. Task canceled? " + canceled);
+    }
+
     @Test
     void invokeAll() throws InterruptedException {
         executor = Executors.newWorkStealingPool();
@@ -96,7 +125,7 @@ class ThreadPools {
                 buildCallable("task3", 3));
 
         System.out.println("Go!");
-        // Should have been called waitForAll
+        // Should have been called waitForAll - it blocks!!
         List<Future<String>> futures = executor.invokeAll(callables);
 
         futures.stream()
@@ -120,8 +149,8 @@ class ThreadPools {
 
         List<Callable<String>> callables = Arrays.asList(
                 // Set sleepSeconds to 0 or less in ALL tasks to generate an ExecutionException
-                buildCallable("task1", 0),
-                buildCallable("task2", 0),
+                buildCallable("task1", 2),
+                buildCallable("task2", 3),
                 buildCallable("task3", 1));
 
         String result = executor.invokeAny(callables);
