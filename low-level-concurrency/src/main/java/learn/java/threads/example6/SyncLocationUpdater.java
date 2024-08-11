@@ -15,8 +15,7 @@ public class SyncLocationUpdater implements Runnable {
             int x = random.nextInt(1000);
             int y = random.nextInt(1000);
 
-            this.setLocation(x,y);
-
+            this.setLocation(x, y);
         }
         System.out.println("Final value: " + location);
     }

@@ -19,6 +19,10 @@ public class DiningPhilosophersApp {
             Object leftFork = forks[i];
             Object rightFork = forks[(i + 1) % NUM_PHILOSEPHERS];
 
+            // Uncomment this line to get deadlock
+            // philosophers[i] = new Philosopher(leftFork, rightFork);
+
+            // Comment this block to get deadlock
             if (i == NUM_PHILOSEPHERS-1) {
                 philosophers[i] = new Philosopher(leftFork, rightFork);
             } else {

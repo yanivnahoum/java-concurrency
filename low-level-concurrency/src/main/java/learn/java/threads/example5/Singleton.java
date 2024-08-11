@@ -2,6 +2,12 @@ package learn.java.threads.example5;
 
 /**
  * https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+ *
+ * A write to volatile object is guaranteed to happen after all the writes to that object and therefore
+ * a reordering will not occur
+ *
+ * Please note that in general, using a singleton pattern is not recommended.
+ *
  */
 public class Singleton {
 
@@ -28,7 +34,8 @@ public class Singleton {
                     // Allocate Object
                     // Initialize Object
                     // Assign Object to instance
-                    instance = new Singleton();
+                    instance = new Singleton();    // This instruction might be reordered having the assignment BEFORE object init
+                                                   // causing threads, in rare cases, to obtain an un-initialized object
                 }
             }
         }

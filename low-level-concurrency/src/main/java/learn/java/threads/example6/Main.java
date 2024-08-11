@@ -9,26 +9,30 @@ public class Main {
         AtomicRefLocationUpdater atomicRefUpdater = new AtomicRefLocationUpdater();
         SyncLocationUpdater synchronisedUpdater = new SyncLocationUpdater();
 
-        //---- Atomic Ref Updater ---//
-        System.out.println("Starting Atomic Ref Updater");
-        System.out.println("===========================");
-        runThreads(atomicRefUpdater);
-
         //---- Synchronised Updater ---//
-        System.out.println("Starting Synchronised Updater");
-        System.out.println("=============================");
-        runThreads(synchronisedUpdater);
+        runThreads(synchronisedUpdater, "SYNCHRONIZED");
+
+        //---- Atomic Ref Updater ---//
+        runThreads(atomicRefUpdater, "ATOMIC REF");
     }
 
-    private static void runThreads(Runnable runnable) throws InterruptedException {
+    private static void runThreads(Runnable runnable, String mode) throws InterruptedException {
         Thread t1 = new Thread(runnable);
         Thread t2 = new Thread(runnable);
+
+        System.out.println("Running 2 updating threads in mode: " + mode);
+        System.out.println("========================================================");
         long start = Utils.now();
         t1.start();
         t2.start();
 
         t1.join();
         t2.join();
+
+        System.out.println("Finished Current run in mode: " + mode);
         Utils.elapsedFrom(start);
+        System.out.println("========================================================");
+        System.out.println();
+        System.out.println();
     }
 }

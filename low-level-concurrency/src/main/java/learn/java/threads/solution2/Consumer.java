@@ -14,6 +14,7 @@ public class Consumer implements Runnable {
         String message = null;
         while (!"BYE".equals(message)){
             message = mailBox.take();
+            this.messageCount++;
             System.out.println("Consumer got message: " + message);
         }
         System.out.println("Consumer terminated due to BYE message");

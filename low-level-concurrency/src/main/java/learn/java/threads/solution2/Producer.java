@@ -18,6 +18,7 @@ public class Producer implements Runnable {
         for (String message : WORDS) {
             System.out.println("Producer is sending message : " + message);
             mailBox.put(message);
+            this.messageCount++;
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

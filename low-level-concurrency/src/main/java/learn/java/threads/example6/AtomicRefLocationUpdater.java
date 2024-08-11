@@ -11,13 +11,13 @@ public class AtomicRefLocationUpdater implements Runnable {
     public void run() {
         Random random = new Random();
 
-        for (int i = 0; i < 1_000_000; i++) {
+        for (int i = 0; i < 100_000_000; i++) {
             int x = random.nextInt(1000);
             int y = random.nextInt(1000);
-            Location newLocation = null;
+
+            Location newLocation = new Location(x, y);
             Location currentLocation = null;
             do {
-                newLocation = new Location(x,y);
                 currentLocation = locationRef.get();
             } while (!locationRef.compareAndSet(currentLocation, newLocation));
         }

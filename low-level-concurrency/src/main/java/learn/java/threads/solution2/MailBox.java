@@ -30,7 +30,7 @@ public class MailBox {
         this.notifyAll();
     }
 
-    public boolean isEmpty(){
+    private boolean isEmpty(){
         return "".equals(message);
     }
 }

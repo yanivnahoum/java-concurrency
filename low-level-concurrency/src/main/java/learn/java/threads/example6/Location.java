@@ -1,20 +1,20 @@
 package learn.java.threads.example6;
 
 public class Location {
-    private long x;
-    private long y;
+    private int x;
+    private int y;
 
 
-    public Location(long x, long y) {
+    public Location(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public long getX() {
+    public int getX() {
         return x;
     }
 
-    public long getY() {
+    public int getY() {
         return y;
     }
 

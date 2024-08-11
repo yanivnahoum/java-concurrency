@@ -1,6 +1,8 @@
 package learn.java.threads.solution2;
 
 
+import org.junit.Assert;
+
 public class ProducerConsumerApp {
 
     public static void main(String[] args) throws InterruptedException {
@@ -16,8 +18,8 @@ public class ProducerConsumerApp {
         pt.join();
         ct.join();
 
-        assert (consumer.getMessageCount() > 0);
-        assert (consumer.getMessageCount() == producer.getMessageCount());
+        Assert.assertTrue(consumer.getMessageCount() > 0);
+        Assert.assertTrue(consumer.getMessageCount() == producer.getMessageCount());
     }
 
 }

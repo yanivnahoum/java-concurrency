@@ -8,7 +8,7 @@ public class IncorrectCountingThreads {
 
     public static void main(String[] args) throws InterruptedException {
         Runnable incrementor = () -> {
-            for (int i = 0; i < 500_000_000; i++) {
+            for (int i = 0; i < 100_000_000; i++) {
                 counter++;
             }
         };

@@ -11,7 +11,7 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-        // keep taking messages from the mailbox until you get the message BYE
+        // Keep taking messages from the mailbox until you get the message BYE
     }
 
     public int getMessageCount(){
