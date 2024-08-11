@@ -20,7 +20,7 @@ class Atomic {
         AtomicInteger atomicInt = new AtomicInteger();
         ExecutorService executor = newFixedThreadPool(2);
 
-        IntStream.range(0, 1000000)
+        IntStream.range(0, 1_000_000)
                  .forEach(i -> executor.submit(atomicInt::incrementAndGet));
 
         shutdownAndAwaitTermination(executor);

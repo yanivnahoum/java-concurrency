@@ -29,14 +29,16 @@ class ThreadPools {
 
     @Test
     void submitRunnableToThreadPool() {
-        executor = newSingleThreadExecutor();
-        executor.submit(() -> {
+        // Specify number of threads in pool
+        executor = newFixedThreadPool(1);
+        executor.execute(() -> {
             String threadName = Thread.currentThread().getName();
             boolean daemon = Thread.currentThread().isDaemon();
             System.out.printf("Hello #1 from %s, daemon=%s%n", threadName, daemon);
             sleepUninterruptibly(2, SECONDS);
+            System.out.println("#1 done");
         });
-        executor.submit(() -> {
+        executor.execute(() -> {
             String threadName = Thread.currentThread().getName();
             boolean daemon = Thread.currentThread().isDaemon();
             System.out.printf("Hello #2 from %s, daemon=%s%n", threadName, daemon);
@@ -45,8 +47,7 @@ class ThreadPools {
 
     @Test
     void submitCallableToThreadPool() {
-        // Specify number of threads in pool
-        executor = newFixedThreadPool(1);
+        executor = newSingleThreadExecutor();
         Future<Integer> future = executor.submit(ThreadPools::getInt);
 
         System.out.println("future done? " + future.isDone());
@@ -63,7 +64,7 @@ class ThreadPools {
         System.out.print("result: " + result);
     }
 
-    private static Integer getInt() {
+    private static int getInt() {
         String threadName = Thread.currentThread().getName();
         System.out.println("Hello " + threadName);
         sleepUninterruptibly(1, SECONDS);
