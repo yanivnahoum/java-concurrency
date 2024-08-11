@@ -56,7 +56,7 @@ class BeeperTest {
     private void runTasks() throws Exception {
         Runnable beepTask = beepTaskCaptor.getValue();
         beepTask.run();
-        Callable cancelTask = cancelTaskCaptor.getValue();
+        Callable<Boolean> cancelTask = cancelTaskCaptor.getValue();
         cancelTask.call();
     }
 }
