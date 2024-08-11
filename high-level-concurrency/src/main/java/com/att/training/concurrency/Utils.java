@@ -25,4 +25,8 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static String currentThreadName() {
+        return Thread.currentThread().getName();
+    }
 }

@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.att.training.concurrency.Utils.currentThreadName;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
@@ -47,7 +48,7 @@ class CompletableFutures {
 
     private String getInfo() {
         return "I'm currently running on: " + currentThreadName() + ". Is thread daemon? " + Thread.currentThread()
-                                                                                                   .isDaemon();
+                                                                                                         .isDaemon();
     }
 
     @Test
@@ -196,7 +197,7 @@ class CompletableFutures {
             throw new RuntimeException("Boom!");
         }
         System.out.printf("[%s] - Slept %dms, now returning %s as %s%n", currentThreadName(), ms, obj, obj.getClass()
-                                                                                                          .getSimpleName());
+                                                                                                                .getSimpleName());
         return obj;
     }
 
@@ -212,10 +213,6 @@ class CompletableFutures {
         return all.thenApply(ignore -> futures.stream()
                                               .map(CompletableFuture::join)
                                               .collect(toList()));
-    }
-
-    private static String currentThreadName() {
-        return Thread.currentThread().getName();
     }
 
     private static ThreadFactory daemonThreadFactory() {
