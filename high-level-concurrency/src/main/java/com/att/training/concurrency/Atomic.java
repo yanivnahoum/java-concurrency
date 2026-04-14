@@ -14,12 +14,10 @@ import static java.lang.IO.println;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 class Atomic {
-
     @Test
     void increment() {
         var atomicInt = new AtomicInteger();
         try (ExecutorService executor = newFixedThreadPool(2)) {
-
             for (int i = 0; i < 1_000_000; i++) {
                 executor.submit(atomicInt::incrementAndGet);
             }
@@ -79,7 +77,8 @@ class Atomic {
     void longAdder() {
         var adder = new LongAdder();
         try (ExecutorService executor = newFixedThreadPool(10)) {
-            LongStream.rangeClosed(1, 1_000_000).forEach(i -> executor.execute(() -> adder.add(i)));
+            LongStream.rangeClosed(1, 1_000_000)
+                    .forEach(i -> executor.execute(() -> adder.add(i)));
         }
 
         println("Counter: " + adder.sum());
