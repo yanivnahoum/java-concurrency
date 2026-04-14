@@ -115,7 +115,8 @@ class ThreadPools {
                 // Set sleepSeconds to 0 or less to generate an ExecutionException
                 buildCallable("task1", 1),
                 buildCallable("task2", 2),
-                buildCallable("task3", 3));
+                buildCallable("task3", 3)
+        );
 
         IO.println("Go!");
         // Should have been called waitForAll - it blocks!!
