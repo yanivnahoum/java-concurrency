@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
@@ -12,8 +13,6 @@ import static com.att.training.concurrency.Utils.currentThreadName;
 import static com.att.training.concurrency.Utils.keepJvmAliveFor;
 import static com.att.training.concurrency.Utils.shutdownAndAwaitTermination;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
-import static java.util.concurrent.Executors.newScheduledThreadPool;
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -29,9 +28,9 @@ class Schedulers {
 
     @Test
     void runOnce() {
-        scheduledExecutor = newSingleThreadScheduledExecutor();
+        scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
-        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime() + " , daemon? " + Thread.currentThread().isDaemon());
+        Runnable task = () -> IO.println("Scheduling: " + System.nanoTime() + " , daemon? " + Thread.currentThread().isDaemon());
         ScheduledFuture<?> future = scheduledExecutor.schedule(task, 3, SECONDS);
 
         sleepUninterruptibly(1, SECONDS);
@@ -42,7 +41,7 @@ class Schedulers {
 
     @Test
     void runPeriodically() {
-        scheduledExecutor = newScheduledThreadPool(1);
+        scheduledExecutor = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             System.out.printf("%s - Starting task: %s. Daemon? %b%n", LocalTime.now(), currentThreadName(), Thread.currentThread().isDaemon());
             sleepUninterruptibly(500, MILLISECONDS);
@@ -59,13 +58,13 @@ class Schedulers {
 
     @Test
     void runPeriodicallyWithDaemonThreads() {
-        System.out.println("Hello!");
+        IO.println("Hello!");
         var threadFactory = new ThreadFactoryBuilder()
                 .setDaemon(true)
                 .build();
-        scheduledExecutor = newSingleThreadScheduledExecutor(threadFactory);
+        scheduledExecutor = Executors.newSingleThreadScheduledExecutor(threadFactory);
 
-        Runnable task = () -> System.out.println("Scheduling: " + System.nanoTime() + ", isDaemon? " + Thread.currentThread().isDaemon());
+        Runnable task = () -> IO.println("Scheduling: " + System.nanoTime() + ", isDaemon? " + Thread.currentThread().isDaemon());
 
         int initialDelay = 0;
         int period = 1;
@@ -79,7 +78,7 @@ class Schedulers {
         var threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("fixed-rate-scheduler-pool-%d")
                 .build();
-        scheduledExecutor = newScheduledThreadPool(1, threadFactory);
+        scheduledExecutor = Executors.newScheduledThreadPool(1, threadFactory);
 
         Runnable task = () -> {
             System.out.printf("%s - Starting task1: %s%n", LocalTime.now(), currentThreadName());
@@ -106,7 +105,7 @@ class Schedulers {
         var threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("fixed-delay-scheduler-pool-%d")
                 .build();
-        scheduledExecutor = newScheduledThreadPool(1, threadFactory);
+        scheduledExecutor = Executors.newScheduledThreadPool(1, threadFactory);
 
         Runnable task = () -> {
             System.out.printf("%s - Starting task: %s%n", LocalTime.now(), currentThreadName());

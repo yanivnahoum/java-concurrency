@@ -35,11 +35,11 @@ class CompletableFutures {
     @Test
     void supplyAsyncTask() {
         CompletableFuture<String> future = CompletableFuture.supplyAsync(this::getInfo);
-        System.out.println(future.join());
+        IO.println(future.join());
     }
 
     private void printInfo() {
-        System.out.println(getInfo());
+        IO.println(getInfo());
     }
 
     private String getInfo() {
@@ -53,13 +53,13 @@ class CompletableFutures {
 //                .handle(this::handleResult);
 //                .handle((result, ex) -> ex == null ? 0 : 128);
 //                .exceptionally(Throwable::toString);
-        System.out.println(futureString.join());
+        IO.println(futureString.join());
     }
 
     private CompletableFuture<String> getAsync(String str) {
         CompletableFuture<String> future = new CompletableFuture<>();
         ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor(daemonThreadFactory());
-        System.out.println("Will return your string soon....");
+        IO.println("Will return your string soon....");
 
         scheduler.schedule(() -> {
             // Complete the future: with a result/exception, or even cancel it
@@ -92,7 +92,7 @@ class CompletableFutures {
 //                .join();
 
 
-        // Uncomment this to complete futureString from the main thread. How does it affect the the rest of the chained tasks?
+        // Uncomment this to complete futureString from the main thread. How does it affect the rest of the chained tasks?
 //        futureString.complete("100");
         f1.join();
 //
@@ -130,7 +130,7 @@ class CompletableFutures {
 
         // The method that uses the two results can be run on f1's pool
         CompletableFuture<String> combinedFuture = f1.thenCombine(f2, (str, val) -> getInfo() + ", got " + str + " and " + val);
-        System.out.println(combinedFuture.join());
+        IO.println(combinedFuture.join());
     }
 
     @Test
@@ -139,7 +139,7 @@ class CompletableFutures {
         CompletableFuture<String> f2 = supplyAsync(() -> sleepAndReturn(200, "two"));
 
         CompletableFuture<String> combinedFuture = f1.applyToEither(f2, str -> getInfo() + ", got " + str);
-        System.out.println(combinedFuture.join());
+        IO.println(combinedFuture.join());
     }
 
     @Test
@@ -162,7 +162,7 @@ class CompletableFutures {
                 .filter(not(CompletableFuture::isCompletedExceptionally))
                 .map(cf -> cf.join().toString())
                 .collect(joining(", "));
-        System.out.println("Results: " + results);
+        IO.println("Results: " + results);
     }
 
     @Test

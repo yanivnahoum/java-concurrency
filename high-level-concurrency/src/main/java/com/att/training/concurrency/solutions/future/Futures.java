@@ -10,8 +10,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class Futures {
-
-    public static void main(String[] args) {
+    void main() {
         Futures futures = new Futures();
         futures.printMessageLengthAsync().join();
     }

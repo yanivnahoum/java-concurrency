@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Runner {
 
-    public static void main(String[] args) {
+    void main() {
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setDaemon(true)
                 .build();

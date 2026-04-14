@@ -1,6 +1,6 @@
 package com.att.training.concurrency;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,32 +10,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static com.att.training.concurrency.Utils.shutdownAndAwaitTermination;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
-import static java.util.concurrent.Executors.newFixedThreadPool;
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slow
 class ThreadPools {
-
+    @AutoClose
     private ExecutorService executor;
-
-    @AfterEach
-    void afterEach() {
-        shutdownAndAwaitTermination(executor);
-    }
 
     @Test
     void submitRunnableToThreadPool() {
         // Specify number of threads in pool
-        executor = newFixedThreadPool(1);
+        executor = Executors.newFixedThreadPool(1);
         executor.execute(() -> {
             String threadName = Thread.currentThread().getName();
             boolean daemon = Thread.currentThread().isDaemon();
             System.out.printf("Hello #1 from %s, daemon=%s%n", threadName, daemon);
             sleepUninterruptibly(2, SECONDS);
-            System.out.println("#1 done");
+            IO.println("#1 done");
         });
         executor.execute(() -> {
             String threadName = Thread.currentThread().getName();
@@ -46,10 +38,10 @@ class ThreadPools {
 
     @Test
     void submitCallableToThreadPool() {
-        executor = newSingleThreadExecutor();
+        executor = Executors.newSingleThreadExecutor();
         Future<Integer> future = executor.submit(ThreadPools::getInt);
 
-        System.out.println("future done? " + future.isDone());
+        IO.println("future done? " + future.isDone());
 
         Integer result = null;
         try {
@@ -59,20 +51,20 @@ class ThreadPools {
             e.printStackTrace();
         }
 
-        System.out.println("future done? " + future.isDone());
-        System.out.print("result: " + result);
+        IO.println("future done? " + future.isDone());
+        IO.print("result: " + result);
     }
 
     private static int getInt() {
         String threadName = Thread.currentThread().getName();
-        System.out.println("Hello " + threadName);
+        IO.println("Hello " + threadName);
         sleepUninterruptibly(1, SECONDS);
         return 123;
     }
 
     @Test
     void getFutureWithTimeout() throws Exception {
-        executor = newFixedThreadPool(1);
+        executor = Executors.newFixedThreadPool(1);
 
         Future<Integer> future = executor.submit(() -> {
             SECONDS.sleep(2);
@@ -81,7 +73,7 @@ class ThreadPools {
 
         // Decrease to 1 to see exception
         int result = future.get(3, SECONDS);
-        System.out.println("Result: " + result);
+        IO.println("Result: " + result);
     }
 
     /**
@@ -97,13 +89,13 @@ class ThreadPools {
      */
     @Test
     void cancelTask() throws InterruptedException {
-        executor = newFixedThreadPool(1);
+        executor = Executors.newFixedThreadPool(1);
 
         Future<Integer> future = executor.submit(() -> {
             String threadName = Thread.currentThread().getName();
-            System.out.println("Running task on " + threadName);
+            IO.println("Running task on " + threadName);
             SECONDS.sleep(2);
-            System.out.println("Task done.");
+            IO.println("Task done.");
             return 123;
         });
 
@@ -112,7 +104,7 @@ class ThreadPools {
         // Return value indicated whether we were abe to cancel the task before it completed
         boolean canceled = future.cancel(true);
 
-        System.out.println("Done. Task canceled? " + canceled);
+        IO.println("Done. Task canceled? " + canceled);
     }
 
     @Test
@@ -125,7 +117,7 @@ class ThreadPools {
                 buildCallable("task2", 2),
                 buildCallable("task3", 3));
 
-        System.out.println("Go!");
+        IO.println("Go!");
         // Should have been called waitForAll - it blocks!!
         List<Future<String>> futures = executor.invokeAll(callables);
 
@@ -155,7 +147,7 @@ class ThreadPools {
                 buildCallable("task3", 3));
 
         String result = executor.invokeAny(callables);
-        System.out.println("Result: " + result);
+        IO.println("Result: " + result);
     }
 
     private static Callable<String> buildCallable(String result, long sleepSeconds) {

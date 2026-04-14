@@ -12,5 +12,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @Tag("slow")
-@interface Slow {
-}
+@interface Slow {}

@@ -1,6 +1,5 @@
 package com.att.training.concurrency.solutions.threadpool2;
 
-import com.att.training.concurrency.Utils;
 import com.att.training.concurrency.exercises.common.CalculatorService;
 
 import java.util.concurrent.ExecutorService;
@@ -27,7 +26,7 @@ class Reducer {
     }
 
     long get() {
-        Utils.shutdownAndAwaitTermination(executorService);
+        executorService.close();
         return value.sum();
     }
 }

@@ -26,7 +26,7 @@ class EnhancedFuture {
 
     static <T> CompletableFuture<T> orTimeout(CompletableFuture<T> future, long delay, TimeUnit unit) {
         ScheduledFuture<?> timeout = scheduler.schedule(() -> timeOut(future), delay, unit);
-        return future.whenComplete((t, throwable) -> timeout.cancel(false));
+        return future.whenComplete((_, _) -> timeout.cancel(false));
     }
 
     private static void timeOut(CompletableFuture<?> future) {
