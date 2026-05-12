@@ -1,7 +1,7 @@
 package com.att.training.concurrency;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
@@ -11,20 +11,14 @@ import java.util.concurrent.ScheduledFuture;
 
 import static com.att.training.concurrency.Utils.currentThreadName;
 import static com.att.training.concurrency.Utils.keepJvmAliveFor;
-import static com.att.training.concurrency.Utils.shutdownAndAwaitTermination;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slow
 class Schedulers {
-
+    @AutoClose
     private ScheduledExecutorService scheduledExecutor;
-
-    @AfterEach
-    void afterEach() {
-        shutdownAndAwaitTermination(scheduledExecutor);
-    }
 
     @Test
     void runOnce() {

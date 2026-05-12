@@ -19,7 +19,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 @Slow
 class CompletableFutures {
@@ -185,7 +184,7 @@ class CompletableFutures {
     void runMultipleTasks() {
         List<CompletableFuture<String>> futures = IntStream.range(1, 10)
                 .mapToObj(this::intToStringAsync)
-                .collect(toList());
+                .toList();
 
         merge(futures)
                 .thenAccept(System.out::println)
@@ -208,14 +207,14 @@ class CompletableFutures {
     }
 
     /**
-     * Flattens an list of CompletableFutures into a CompletableFuture of a list
+     * Flattens a list of CompletableFutures into a CompletableFuture of a list
      */
     private static <T> CompletableFuture<List<T>> merge(List<CompletableFuture<T>> futures) {
         CompletableFuture<Void> all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
 
-        return all.thenApply(ignore -> futures.stream()
+        return all.thenApply(_ -> futures.stream()
                 .map(CompletableFuture::join)
-                .collect(toList()));
+                .toList());
     }
 
 }
