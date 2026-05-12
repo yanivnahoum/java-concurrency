@@ -16,7 +16,7 @@
             -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
             -Xshare:off
         </argLine>
-        <guava.version>33.5.0-jre</guava.version>
+        <guava.version>33.6.0-jre</guava.version>
         <lombok.version>1.18.44</lombok.version>
         <junit-jupiter.version>6.0.3</junit-jupiter.version>
         <mockito.version>5.23.0</mockito.version>
